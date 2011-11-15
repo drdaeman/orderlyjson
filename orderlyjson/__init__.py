@@ -1,5 +1,5 @@
 import orderly_json
-import jsonschema
+import validictory
 import json
 
 def parse(orderly_string):
@@ -15,7 +15,7 @@ def validate(json_object, orderly_object):
   """validates the json string with an orderly definition"""
   if type(orderly_object) is str:
     orderly_object = parse(orderly_object)
-  jsonschema.validate(json_object, orderly_object)
+  validictory.validate(json_object, orderly_object)
 
 
 def test():

@@ -26,7 +26,6 @@ setup(
     license='MIT',
     keywords=['Orderly', 'JSON'],
     packages=['orderlyjson'],
-    data_files=[('', '')],
-    requires=['jsonschema', 'antlr3'],
+    requires=['validictory (>= 0.7)', 'antlr3'],
     cmdclass={'build_py': custom_build_py}
 )
