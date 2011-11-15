@@ -1,0 +1,23 @@
+# Generated
+orderlyjson/OrderlyJSONLexer.py
+orderlyjson/OrderlyJSONParser.py
+orderlyjson/OrderlyJSON.tokens
+
+# Locally-stored deps
+/antlr3
+/antlr*.jar
+/jsonschema
+
+# Temporary
+*~
+*.bak
+/tmp
+
+# Python compiled
+*.pyc
+*.pyo
+
+# Distutils
+/MANIFEST
+/build
+/dist
