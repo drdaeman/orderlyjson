@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+
+from __future__ import with_statement
+from optparse import OptionParser
+import orderlyjson, json
+import sys
+
+usage = "usage: %prog [options] [filename]"
+parser = OptionParser(usage=usage)
+parser.add_option("-o", "--output", dest="out",
+                  help="write JSONSchema to FILE instead of stdout",
+                  metavar="FILE")
+parser.add_option("-i", "--indent", dest="indent", type="int", default=4,
+                  help="JSON identation level")
+parser.add_option("-v", "--validate", dest="validate",
+                  help="validate against the FILE instead of compiling",
+                  metavar="FILE")
+
+(options, args) = parser.parse_args()
+
+if len(args) > 1:
+    parser.error("Only one filename is allowed")
+if options.validate and options.out:
+    parser.error("Options -o and -v are mutually exclusive")
+
+with open(args[0], "r") if len(args) > 0 else sys.stdin as f:
+    schema = orderlyjson.parse(f.read())
+
+if options.validate:
+    with open(options.validate, "r") as f:
+        doc = json.loads(f.read())
+        try:
+            orderlyjson.validate(doc, schema)
+        except Exception as exc:
+            sys.stderr.write(str(exc))
+            sys.stderr.write("\n")
+            sys.exit(1)
+else:
+    with (open(options.out, "w") if options.out else sys.stdout) as f:
+        f.write(json.dumps(schema, indent=options.indent))
+        f.write("\n")
