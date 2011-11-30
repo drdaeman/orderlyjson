@@ -21,7 +21,10 @@ class custom_build_ext(build_ext):
                     raise RuntimeError("antlr3 (>= 3.2) is required to build")
                 antlr3 = [antlr3]
             source_file = os.path.join('orderlyjson', 'OrderlyJSON.g')
-            target_dir = os.path.join(self.build_lib, 'orderlyjson')
+            if self.inplace:
+                target_dir = 'orderlyjson'
+            else:
+                target_dir = os.path.join(self.build_lib, 'orderlyjson')
             tokens_file = os.path.join(target_dir, 'OrderlyJSON.tokens')
             self.mkpath(target_dir)
             self.spawn(antlr3 + ['-fo', target_dir, source_file])
@@ -55,6 +58,6 @@ setup(
     package_data={'orderlyjson': ['*.g']},
     data_files=[('share/doc/orderlyjson', ['README.md'])],
     scripts=['tools/orderly'],
-    install_requires=['validictory>=0.7', 'antlr_python_runtime>=3.1'],
+    install_requires=['validictory>=0.7', 'antlr_python_runtime>=3.2'],
     cmdclass={'build_ext': custom_build_ext}
 )
