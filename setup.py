@@ -10,16 +10,17 @@ class custom_build_ext(build_ext):
         if True or not self.dry_run:
             antlr3 = None
             # First, try locally-hosted antlr3
-            if os.path.exists('antlr-3.2.jar'):
+            if os.path.exists('antlr-3.1.3.jar'):
                 antlr3 = find_executable('java')
                 if antlr3 is not None:
-                    antlr3 = [antlr3, '-jar', 'antlr-3.2.jar']
+                    antlr3 = [antlr3, '-jar', 'antlr-3.1.3.jar']
             # Then, try to find system-provided one
             if antlr3 is None:
                 antlr3 = find_executable('antlr3')
                 if antlr3 is None:
-                    raise RuntimeError("antlr3 (>= 3.2) is required to build")
+                    raise RuntimeError("antlr3 (>= 3.1 but < 3.2) is required")
                 antlr3 = [antlr3]
+            # TODO: antlr3 jar and python runtime version check?
             source_file = os.path.join('orderlyjson', 'OrderlyJSON.g')
             if self.inplace:
                 target_dir = 'orderlyjson'
@@ -58,6 +59,6 @@ setup(
     package_data={'orderlyjson': ['*.g']},
     data_files=[('share/doc/orderlyjson', ['README.md'])],
     scripts=['tools/orderly'],
-    install_requires=['validictory>=0.7', 'antlr_python_runtime>=3.2'],
+    install_requires=['validictory>=0.7', 'antlr_python_runtime>=3.1'],
     cmdclass={'build_ext': custom_build_ext}
 )
