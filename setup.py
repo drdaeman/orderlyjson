@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 from distutils.core import setup
-from distutils.command.build_py import build_py
+from distutils.command.build_ext import build_ext
 from distutils.spawn import find_executable
 import os, os.path
 
-class custom_build_py(build_py):
+class custom_build_ext(build_ext):
     def run(self):
         if True or not self.dry_run:
             antlr3 = None
@@ -26,7 +26,7 @@ class custom_build_py(build_py):
             self.mkpath(target_dir)
             self.spawn(antlr3 + ['-fo', target_dir, source_file])
             os.unlink(tokens_file)
-        build_py.run(self)
+        build_ext.run(self)
 
 setup(
     name='orderlyjson',
@@ -56,5 +56,5 @@ setup(
     data_files=[('share/doc/orderlyjson', ['README.md'])],
     scripts=['tools/orderly'],
     install_requires=['validictory>=0.7', 'antlr_python_runtime>=3.1'],
-    cmdclass={'build_py': custom_build_py}
+    cmdclass={'build_ext': custom_build_ext}
 )
