@@ -55,6 +55,6 @@ setup(
     package_data={'orderlyjson': ['*.g']},
     data_files=[('share/doc/orderlyjson', ['README.md'])],
     scripts=['tools/orderly'],
-    install_requires=['validictory (>= 0.7)', 'antlr_python_runtime (>= 3.1)'],
+    install_requires=['validictory>=0.7', 'antlr_python_runtime>=3.1)'],
     cmdclass={'build_py': custom_build_py}
 )
