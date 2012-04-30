@@ -1,43 +1,30 @@
-import orderly_json
+import OrderlyJSONLexer, OrderlyJSONParser
 import validictory
 import json
 
-def parse(orderly_string):
+def validate(json_object, orderly_object):
+    """Validates the JSON object with an Orderly definition"""
+    if type(orderly_object) in (str, unicode):
+        orderly_object = parse(orderly_object)
+    if type(json_object) in (str, unicode):
+        json_object = json.loads(json_object)
+    validictory.validate(json_object, orderly_object)
+
+def parseStream(char_stream):
+    lexer = OrderlyJSONLexer.OrderlyJSONLexer(char_stream)
+    tokens = OrderlyJSONParser.CommonTokenStream(lexer)
+    parser = OrderlyJSONParser.OrderlyJSONParser(tokens)
+    result = parser.orderly_schema()
+    return result
+
+def parseString(string):
     """Parses an Orderly-JSON string, and returns a JSON-Schema object"""
-    return orderly_json.parseString(orderly_string)
+    result = parseStream(OrderlyJSONLexer.ANTLRStringStream(string))
+    return result[0].get_object()
 
 def parseFile(path):
     """Parses an Orderly-JSON file, and returns a JSON-Schema object"""
-    return orderly_json.parseFile(path)
+    result = parseStream(OrderlyJSONLexer.ANTLRFileStream(path))
+    return result[0].get_object()
 
-def validate(json_object, orderly_object):
-    """Validates the JSON string with an Orderly definition"""
-    if type(orderly_object) is str:
-        orderly_object = parse(orderly_object)
-    validictory.validate(json_object, orderly_object)
-
-
-def test():
-    example_orderly = """
-    object {
-        string name;
-        string description?;
-        string homepage /^http:/;
-        integer {1500,3000} invented;
-    }*;
-    """
-
-    example_json = """
-    {
-        "name": "orderly",
-        "description": "A schema language for JSON",
-        "homepage": "http://orderly-json.org",
-        "invented": 2009
-    }
-    """
-    example_json = json.loads(example_json)
-    schema = parse(example_orderly)
-    try:
-        validate(example_json, schema)
-    except:
-        pass
+parse = parseString

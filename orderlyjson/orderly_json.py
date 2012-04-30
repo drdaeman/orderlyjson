@@ -1,7 +1,4 @@
 import json
-import sys
-import traceback
-import os.path
 
 class Prefix(object):
     def __init__(self, kind, entries=None, rng=None, more=None):
@@ -101,36 +98,3 @@ class Suffix(object):
             # Take off the beginning and ending slashes
             result["pattern"] = result["pattern"][1:-1]
         return result
-
-# orderlyjson parser and lexer requires this file, so we need to
-# move the actual interface down here
-
-def parseString(string):
-    if "ANTLRStringStream" not in globals():
-        from OrderlyJSONLexer import ANTLRStringStream
-    result = parseStream(ANTLRStringStream(string))
-    return result[0].get_object()
-
-def parseFile(path):
-    if "ANTLRFileStream" not in globals():
-        from OrderlyJSONLexer import ANTLRFileStream
-    return parseStream(ANTLRFileStream(path))[0].get_object()
-
-def parseStream(char_stream):
-    try:
-        from OrderlyJSONLexer import OrderlyJSONLexer
-        from OrderlyJSONParser import ANTLRFileStream, ANTLRStringStream, \
-            CommonTokenStream, OrderlyJSONParser, RecognitionException
-    except ImportError:
-        pass # Circular import
-
-    lexer = OrderlyJSONLexer(char_stream)
-
-    tokens = CommonTokenStream(lexer)
-    parser = OrderlyJSONParser(tokens);
-
-    try:
-        result = parser.orderly_schema()
-    except RecognitionException:
-        traceback.print_stack()
-    return result
