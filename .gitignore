@@ -1,6 +1,6 @@
 # Generated
-orderlyjson/OrderlyJSONLexer.py
-orderlyjson/OrderlyJSONParser.py
+#orderlyjson/OrderlyJSONLexer.py
+#orderlyjson/OrderlyJSONParser.py
 orderlyjson/OrderlyJSON.tokens
 
 # Locally-stored deps

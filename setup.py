@@ -5,7 +5,15 @@ from distutils.command.build_ext import build_ext
 from distutils.spawn import find_executable
 import os, os.path
 
-class custom_build_ext(build_ext):
+class custom_build_grammar(build_ext):
+    """
+    (Re)builds OrderlyJSONLexer.py and OrderlyJSONParser.py
+    from ANTLR3 grammar file OrderlyJSON.g
+
+    Requires ANTLR 3.1 compiler to be installed.
+    Will try ./antlr-3.1.3.jar if available, or system-wide antlr3 binary.
+    Make sure its version matches antlr_python_runtime (no checks are made).
+    """
     def run(self):
         if True or not self.dry_run:
             antlr3 = None
@@ -13,7 +21,7 @@ class custom_build_ext(build_ext):
             if os.path.exists('antlr-3.1.3.jar'):
                 antlr3 = find_executable('java')
                 if antlr3 is not None:
-                    antlr3 = [antlr3, '-jar', 'antlr-3.1.3.jar']
+                    antlr3 = [antlr3, '-cp', 'antlr-3.1.3.jar', 'org.antlr.Tool']
             # Then, try to find system-provided one
             if antlr3 is None:
                 antlr3 = find_executable('antlr3')
@@ -42,8 +50,8 @@ setup(
     url='https://github.com/kroo/py-orderly-json',
     author='Elliot Kroo',
     author_email='elliot@kroo.net',
-    #maintainer='Aleksey Zhukov',
-    #maintainer_email='drdaeman@public.drdaeman.pp.ru',
+    maintainer='Aleksey Zhukov',
+    maintainer_email='drdaeman@public.drdaeman.pp.ru',
     license='MIT',
     keywords=['Orderly', 'JSON'],
     platforms=['any'],
@@ -59,6 +67,6 @@ setup(
     package_data={'orderlyjson': ['*.g']},
     data_files=[('share/doc/orderlyjson', ['README.md'])],
     scripts=['tools/orderly'],
-    install_requires=['validictory>=0.7', 'antlr_python_runtime>=3.1'],
-    cmdclass={'build_ext': custom_build_ext}
+    requires=['validictory (>=0.7)', 'antlr_python_runtime (==3.1.3)'],
+    cmdclass={'build_grammar': custom_build_grammar}
 )

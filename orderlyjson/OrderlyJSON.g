@@ -14,16 +14,16 @@ from OrderlyJSONLexer import OrderlyJSONLexer
 
 @main {
 def main(argv, otherArg=None):
-  char_stream = ANTLRFileStream(sys.argv[1])
-  lexer = OrderlyJSONLexer(char_stream)
+    char_stream = ANTLRFileStream(sys.argv[1])
+    lexer = OrderlyJSONLexer(char_stream)
 
-  tokens = CommonTokenStream(lexer)
-  parser = OrderlyJSONParser(tokens);
+    tokens = CommonTokenStream(lexer)
+    parser = OrderlyJSONParser(tokens);
 
-  try:
+    try:
         print parser.orderly_schema()
-  except RecognitionException:
-	traceback.print_stack()
+    except RecognitionException:
+        traceback.print_stack()
 }
 
 WS : ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+   { $channel = HIDDEN; } ;
